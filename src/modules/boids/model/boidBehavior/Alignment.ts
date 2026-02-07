@@ -40,7 +40,7 @@ export class Alignment implements BoidBehavior {
 
     const steering = averageVelocity
       .subtract(currentBoid.velocity)
-      .multiply(this.affinity);
+      .scale(this.affinity);
 
     return steering;
   }

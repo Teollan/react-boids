@@ -40,7 +40,7 @@ export class Cohesion implements BoidBehavior {
 
     const steering = centerOfMass
       .subtract(currentBoid.position)
-      .multiply(this.affinity);
+      .scale(this.affinity);
 
     return steering;
   }

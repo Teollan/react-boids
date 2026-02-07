@@ -16,15 +16,23 @@ export class Boids {
     this.size = size;
   }
 
-  iterate() {
-    this.forEach((boid, index) => {
+  iterate(deltaTime: number): void {
+    const updates = this.map((boid, index) => {
       const steeringVectors = this.behaviors
         .map((behavior) => behavior.getSteering(index, this));
 
-      const totalSteering = steeringVectors
-        .reduce((total, vector) => total.add(vector), Vector.zero());
-      
-      boid.steer(totalSteering);
+      const steering = steeringVectors
+        .reduce((total, vector) => total.add(vector), Vector.zero())
+        .scale(deltaTime / 1000);
+
+      return {
+        boid,
+        steering,
+      };
+    });
+
+    updates.forEach(({ boid, steering }) => {
+      boid.steer(steering);
     });
   }
 
@@ -83,8 +91,10 @@ export class Boids {
     });
   }
 
-  addBehavior(behavior: BoidBehavior): void {
+  addBehavior(behavior: BoidBehavior) {
     this.behaviors.push(behavior);
+
+    return this;
   }
 
   addBoid(boid: Boid): void {

@@ -30,7 +30,7 @@ export class Separation implements BoidBehavior {
     for (const boid of neighbors) {
       const offset = boid.position.subtract(currentBoid.position);
       const weight = 1 / offset.magnitude();
-      const delta = offset.multiply(weight);
+      const delta = offset.scale(weight);
 
       steering = steering.subtract(delta);
     }

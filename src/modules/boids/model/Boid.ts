@@ -23,7 +23,7 @@ export class Boid {
     if (this.velocity.magnitude() > this.maxSpeed) {
       this.velocity = this.velocity
         .normalize()
-        .multiply(this.maxSpeed);
+        .scale(this.maxSpeed);
     }
 
     this.position = this.position.add(this.velocity);
