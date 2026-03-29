@@ -1,32 +1,33 @@
 import { useEffect, useRef, type FC } from 'react';
 import styles from './BoidsContainer.module.css';
-import { Boids } from '@/modules/boids/model/Boids';
-import { Cohesion } from '@/modules/boids/model/boidBehavior/Cohesion';
-import { Separation } from '@/modules/boids/model/boidBehavior/Separation';
-import { Alignment } from '@/modules/boids/model/boidBehavior/Alignment';
+import { World } from '@/modules/boids/model/world/World';
+import { Cohesion } from '@/modules/boids/model/behavior/implementations/Cohesion';
+import { Separation } from '@/modules/boids/model/behavior/implementations/Separation';
+import { Alignment } from '@/modules/boids/model/behavior/implementations/Alignment';
+import { EdgeAvoidance } from '@/modules/boids/model/behavior/implementations/EdgeAvoidance';
 import { Boid } from '@/modules/boids/model/Boid';
 import { Vector } from '@/lib/vector';
-import { EdgeAvoidance } from '@/modules/boids/model/boidBehavior/EdgeAvoidance';
+import { WorldRenderer } from '@/modules/boids/view/renderer/WorldRenderer';
 
-const boids = new Boids({
-  width: 1000,
-  height: 1000,
+const world = new World({
+  width: 500,
+  height: 500,
 });
 
-boids
-  .addBehavior(new Cohesion({ perceptionRadius: 250, affinity: 0.1 }))
-  .addBehavior(new Separation({ perceptionRadius: 50 }))
-  .addBehavior(new Alignment({ perceptionRadius: 250, affinity: 0.1 }))
-  .addBehavior(new EdgeAvoidance());
+world
+  .addBehavior(new Cohesion({ perceptionRadius: 500 }))
+  .addBehavior(new Separation({ perceptionRadius: 250 }))
+  .addBehavior(new Alignment({ perceptionRadius: 500 }))
+  .addBehavior(new EdgeAvoidance({ margin: 25 }));
 
 for (let i = 0; i < 50; i++) {
-  boids.addBoid(new Boid({
+  world.addBoid(new Boid({
     position: new Vector(
-      Math.random() * boids.size.width,
-      Math.random() * boids.size.height,
+      Math.random() * world.size.width,
+      Math.random() * world.size.height,
     ),
     velocity: Vector.random(),
-    maxSpeed: 5,
+    maxSpeed: 1,
   }));
 }
 
@@ -40,19 +41,49 @@ export const BoidsContainer: FC = () => {
     let lastTime = performance.now();
     let animationFrameId: number | null = null;
 
+    const renderer = new WorldRenderer({ context, world });
+
     const render = (currentTime: number) => {
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
 
-      boids.iterate(deltaTime);
+      world.iterate(deltaTime);
 
       context.clearRect(0, 0, canvas.width, canvas.height);
 
-      boids.forEach((boid) => {
+      world.forEach((boid) => {
+        const position = boid.position;
+        const direction = boid.velocity.normalize();
+
+        const beak = position.add(direction.scale(10));
+        const leftWing = position.add(direction.rotate((2 * Math.PI) / 3).scale(7));
+        const rightWing = position.add(direction.rotate((-2 * Math.PI) / 3).scale(7));
+
+        // Draw boid as a triangle
         context.beginPath();
-        context.arc(boid.position.x, boid.position.y, 5, 0, 2 * Math.PI);
+        context.moveTo(beak.x, beak.y);
+        context.lineTo(leftWing.x, leftWing.y);
+        context.lineTo(position.x, position.y);
+        context.lineTo(rightWing.x, rightWing.y);
+        context.closePath();
         context.fillStyle = 'black';
         context.fill();
+
+        // Draw boid position gizmo
+        context.beginPath();
+        context.moveTo(position.x, position.y);
+        context.arc(position.x, position.y, 2, 0, 2 * Math.PI);
+        context.closePath();
+        context.fillStyle = 'red';
+        context.fill();
+
+        // Draw boid velocity gizmo
+        context.beginPath();
+        context.moveTo(position.x, position.y);
+        context.lineTo(position.x + boid.velocity.x * 20, position.y + boid.velocity.y * 20);
+        context.strokeStyle = 'green';
+        context.lineWidth = 2;
+        context.stroke();
       });
 
       animationFrameId = requestAnimationFrame(render);
@@ -70,8 +101,8 @@ export const BoidsContainer: FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      width={boids.size.width}
-      height={boids.size.height}
+      width={world.size.width}
+      height={world.size.height}
       className={styles.canvas}
     />
   );

@@ -1,6 +1,6 @@
 import { Vector } from '@/lib/vector';
-import type { BoidBehavior } from '@/modules/boids/model/boidBehavior/BoidBehavior';
-import type { Boids } from '@/modules/boids/model/Boids';
+import type { Behavior } from '@/modules/boids/model/behavior/Behavior';
+import type { World } from '@/modules/boids/model/world/World';
 
 interface EdgeAvoidanceOptions {
   margin: number,
@@ -12,7 +12,7 @@ const DEFAULT_EDGE_AVOIDANCE_OPTIONS: EdgeAvoidanceOptions = {
   turnForce: 0.5,
 }
 
-export class EdgeAvoidance implements BoidBehavior {
+export class EdgeAvoidance implements Behavior {
   private readonly margin: number;
   private readonly turnForce: number;
 
@@ -26,7 +26,7 @@ export class EdgeAvoidance implements BoidBehavior {
     this.turnForce = turnForce;
   }
 
-  getSteering(boidIndex: number, boids: Boids): Vector {
+  getSteering(boidIndex: number, boids: World): Vector {
     const currentBoid = boids.at(boidIndex);
     const { width, height } = boids.size;
 

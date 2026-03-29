@@ -1,6 +1,6 @@
 import { Vector } from '@/lib/vector';
-import type { BoidBehavior } from '@/modules/boids/model/boidBehavior/BoidBehavior';
-import type { Boids } from '@/modules/boids/model/Boids';
+import type { Behavior } from '@/modules/boids/model/behavior/Behavior';
+import type { World } from '@/modules/boids/model/world/World';
 
 interface AlignmentOptions {
   perceptionRadius: number;
@@ -12,7 +12,7 @@ const DEFAULT_ALIGNMENT_OPTIONS: AlignmentOptions = {
   affinity: 0.1,
 };
 
-export class Alignment implements BoidBehavior {
+export class Alignment implements Behavior {
   private readonly perceptionRadius: number;
   private readonly affinity: number;
 
@@ -26,7 +26,7 @@ export class Alignment implements BoidBehavior {
     this.affinity = affinity;
   }
 
-  getSteering(boidIndex: number, boids: Boids): Vector {
+  getSteering(boidIndex: number, boids: World): Vector {
     const currentBoid = boids.at(boidIndex);
     const neighbors = boids.aroundBoid(boidIndex, this.perceptionRadius);
 

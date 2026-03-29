@@ -1,6 +1,6 @@
 import { Vector } from '@/lib/vector';
-import type { BoidBehavior } from '@/modules/boids/model/boidBehavior/BoidBehavior';
-import type { Boids } from '@/modules/boids/model/Boids';
+import type { Behavior } from '@/modules/boids/model/behavior/Behavior';
+import type { World } from '@/modules/boids/model/world/World';
 
 interface SeparationOptions {
   perceptionRadius: number;
@@ -10,7 +10,7 @@ const DEFAULT_SEPARATION_OPTIONS: SeparationOptions = {
   perceptionRadius: 25,
 };
 
-export class Separation implements BoidBehavior {
+export class Separation implements Behavior {
   private readonly perceptionRadius: number;
 
   constructor(options: Partial<SeparationOptions> = {}) {
@@ -21,7 +21,7 @@ export class Separation implements BoidBehavior {
     this.perceptionRadius = perceptionRadius;
   }
 
-  getSteering(boidIndex: number, boids: Boids): Vector {
+  getSteering(boidIndex: number, boids: World): Vector {
     const currentBoid = boids.at(boidIndex);
     const neighbors = boids.aroundBoid(boidIndex, this.perceptionRadius);
 

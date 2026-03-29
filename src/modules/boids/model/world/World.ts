@@ -1,11 +1,11 @@
 import type { Size } from '@/lib/size';
 import { Vector } from '@/lib/vector';
 import type { Boid } from '@/modules/boids/model/Boid';
-import type { BoidBehavior } from '@/modules/boids/model/boidBehavior/BoidBehavior';
+import type { Behavior } from '@/modules/boids/model/behavior/Behavior';
 
-export class Boids {
+export class World {
   readonly boids: Boid[] = [];
-  readonly behaviors: BoidBehavior[] = [];
+  readonly behaviors: Behavior[] = [];
   readonly size: Size;
 
   get length(): number {
@@ -91,7 +91,7 @@ export class Boids {
     });
   }
 
-  addBehavior(behavior: BoidBehavior) {
+  addBehavior(behavior: Behavior) {
     this.behaviors.push(behavior);
 
     return this;

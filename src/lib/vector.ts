@@ -58,4 +58,14 @@ export class Vector {
 
     return this.divide(mag);
   }
+
+  rotate(radians: number): Vector {
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+
+    return new Vector(
+      this.x * cos - this.y * sin,
+      this.x * sin + this.y * cos,
+    );
+  }
 }
