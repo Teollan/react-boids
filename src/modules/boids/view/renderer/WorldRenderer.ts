@@ -68,5 +68,9 @@ export class WorldRenderer {
 
     ctx.beginPath();
     ctx.moveTo(position.x, position.y);
-    ctx.lineTo(position.x + velocity.x * 20, position.y + velocity
+    ctx.lineTo(position.x + velocity.x * 20, position.y + velocity.y * 20);
+    ctx.closePath();
+    ctx.strokeStyle = 'blue';
+    ctx.fill();
+  }
 }

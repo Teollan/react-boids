@@ -9,7 +9,7 @@ interface CohesionOptions {
 
 const DEFAULT_COHESION_OPTIONS: CohesionOptions = {
   perceptionRadius: 75,
-  affinity: 0.1,
+  affinity: 0.005,
 };
 
 export class Cohesion implements Behavior {

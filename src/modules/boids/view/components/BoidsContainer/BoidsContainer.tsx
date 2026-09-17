@@ -10,15 +10,15 @@ import { Vector } from '@/lib/vector';
 import { WorldRenderer } from '@/modules/boids/view/renderer/WorldRenderer';
 
 const world = new World({
-  width: 500,
-  height: 500,
+  width: 1000,
+  height: 1000,
 });
 
 world
-  .addBehavior(new Cohesion({ perceptionRadius: 500 }))
-  .addBehavior(new Separation({ perceptionRadius: 250 }))
-  .addBehavior(new Alignment({ perceptionRadius: 500 }))
-  .addBehavior(new EdgeAvoidance({ margin: 25 }));
+  .addBehavior(new Cohesion({ perceptionRadius: 100 }))
+  .addBehavior(new Separation({ perceptionRadius: 25 }))
+  .addBehavior(new Alignment({ perceptionRadius: 75 }))
+  .addBehavior(new EdgeAvoidance({ margin: 75 }));
 
 for (let i = 0; i < 50; i++) {
   world.addBoid(new Boid({
@@ -27,7 +27,7 @@ for (let i = 0; i < 50; i++) {
       Math.random() * world.size.height,
     ),
     velocity: Vector.random(),
-    maxSpeed: 1,
+    maxSpeed: 15,
   }));
 }
 

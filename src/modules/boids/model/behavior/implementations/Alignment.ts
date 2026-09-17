@@ -9,7 +9,7 @@ interface AlignmentOptions {
 
 const DEFAULT_ALIGNMENT_OPTIONS: AlignmentOptions = {
   perceptionRadius: 50,
-  affinity: 0.1,
+  affinity: 0.15,
 };
 
 export class Alignment implements Behavior {
